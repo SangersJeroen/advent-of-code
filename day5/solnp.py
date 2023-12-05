@@ -43,8 +43,6 @@ def part1():
                 if vals[i] in range(start, start + length):
                     vals[i] -= off
                     break
-                print(oval, vals[i], imap, map_name)
-    print(min(vals))
 
 
 def calc_overlap(irange, imap):
@@ -58,31 +56,19 @@ def calc_overlap(irange, imap):
             [range_min, map_min - 1],
             [map_max + 1, range_max],
         ]
-        print(f"             {map_min}       {map_max}")
-        print("map:         o------o        ")
-        print("range:   *=============*     ")
-        print(f"         {range_min}              {range_max}")
+
         return True, new_ranges
     if map_max >= range_max and map_min <= range_min:
         new_ranges = [[range_min, range_max]]
-        print(f"        {map_min}                {map_max}")
-        print("map:    o---------------o    ")
-        print("range:   *=============*     ")
-        print(f"         {range_min}              {range_max}")
+
         return True, new_ranges
     if map_min >= range_min and map_max >= range_max and map_min <= range_max:
         new_ranges = [[map_min, range_max], [range_min, map_min - 1]]
-        print(f"             {map_min}             {map_max}")
-        print("map:         o------------o  ")
-        print("range:   *=============*     ")
-        print(f"         {range_min}              {range_max}")
+
         return True, new_ranges
     if map_max <= range_max and map_min <= range_min and map_max >= range_min:
         new_ranges = [[range_min, map_max], [map_max + 1, range_max]]
-        print(f"      {map_min}              {map_max}")
-        print("map:  o-------------o        ")
-        print("range:   *=============*     ")
-        print(f"         {range_min}              {range_max}")
+
         return True, new_ranges
     return False, []
 
@@ -94,32 +80,27 @@ def part2():
     for rng_start, rng_length in zip(seeds[::2], seeds[1::2]):
         ranges.append([rng_start, rng_start + rng_length])
 
-    # print("old ranges")
-    # print(ranges)
+    #
+    #
     for map_name in mappings:
         next_ranges = []
-        print(map_name)
-        print(ranges)
+        print(map_name, len(ranges))
         for irange in ranges:
             for imap in mappings[map_name]:
                 has_overlap, new_ranges = calc_overlap(irange, imap)
                 if has_overlap:
-                    print("HAS OVERLAP")
                     nstart, start, length = imap
                     off = start - nstart
                     mod_range = [i - off for i in new_ranges.pop(0)]
-                    print(mod_range)
-                    print("old nr:", next_ranges)
+
                     try:
                         next_ranges.pop(next_ranges.index(irange))
                     except:
                         pass
-                    print("new nr:", next_ranges)
+
                     next_ranges.append(mod_range)
-                    print("appended", next_ranges)
+
                     if len(new_ranges) > 0:
-                        print("------ NEW RANGES -------")
-                        print(new_ranges)
                         for j in new_ranges:
                             next_ranges.append(j)
                     break
@@ -129,9 +110,6 @@ def part2():
     flattened = []
     for i in ranges:
         flattened.extend(i)
-    print(min(flattened))
-    # print("new ranges")
-    # print(ranges)
 
 
 part2()
