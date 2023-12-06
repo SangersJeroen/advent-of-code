@@ -1,0 +1,8 @@
+v = at
+d = v(T-t)
+d = at(T-t)
+d = -at^2 + atT > D 
+t^2 - tT < D/(-a)
+(t-T/2)^2 - T/4 = -D/a; match distance
+t-T/2 = +/-(-D/a + T/4)^(1/2)
+t = +/- (-D/a + T/4)^(1/2) + T/2
