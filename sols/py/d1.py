@@ -4,7 +4,7 @@ if __name__ == "__main__":
     file = r"inputs/d1_p1.txt"
 
     # Part 1
-    list_left, list_right = parse_to_list(file)
+    list_left, list_right = parse_to_lists(file, int)
 
     # Sort the lists in place
     list_left.sort()
@@ -12,11 +12,11 @@ if __name__ == "__main__":
 
     # Compute the absolute difference between numbers in the left and
     # right list and take the sum
-    dist = sum([abs_diff(l, r) for l, r in zip(list_left, list_right)])
+    dist = sum([abs(l-r) for l, r in zip(list_left, list_right)])
     print(dist)
 
     # Part 2
-    list_left, list_right = parse_to_list(file)
+    list_left, list_right = parse_to_lists(file, int)
     counts: list[int] = list()
 
     # Iterating over entries in the left list
