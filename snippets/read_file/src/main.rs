@@ -8,7 +8,7 @@ fn main() {
     let path_to_file = "input.txt";
     let input: String = match read_file(path_to_file) {
         Ok(str) => str,
-        Err(error) => panic!("Problem opening the file: {:?}", error),
+        Err(error) => panic!("Problem opening the file: {error:?}"),
     };
     println!("{input}");
 }
