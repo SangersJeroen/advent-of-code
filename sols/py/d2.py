@@ -1,4 +1,5 @@
 from aoc_lib import parse_to_lists, read_file, split_line
+from time import time_ns
 
 
 def compute_gradient(entries: list[int]) -> list[int]:
@@ -42,11 +43,12 @@ def test_safe_with_dampener(entries: list[int], call_depth=0) -> bool:
 
 if __name__ == "__main__":
     rows: list[list[int]] = read_file(r"inputs/d2.txt")
+    time_start = time_ns()
     count_safe: int = 0
     for line in rows:
         entries: list[int] = list(split_line(line, cast=int))
         if test_safe_with_dampener(entries):
             count_safe += 1
-        # else:
-        #     print(entries, compute_gradient(entries), test_safe_with_dampener(entries))
     print(count_safe)
+    time_end = time_ns()
+    print(f'Part Two calculation took: {(time_end-time_start)*1e-6:.2f} milliseconds')
