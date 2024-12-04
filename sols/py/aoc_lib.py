@@ -7,9 +7,50 @@ def read_file(file: str) -> list[str]:
     # form with the newline characters strpped
     with open(file, "r") as text_file:
         contents: list[str] = text_file.readlines()
+        parsed: list[str] = list()
         for line in contents:
-            line.rstrip("\n")
-    return contents
+            pars = line.rstrip("\n")
+            parsed.append(pars)
+    return parsed 
+
+
+def read_file_as_field(file: str) -> list[list[Any]]:
+    # Take a string ppath relative to the working directory of the
+    # interpeter and return a list where every entry is a line in string
+    # form with the newline characters strpped
+    with open(file, "r") as text_file:
+        contents: list[str] = text_file.readlines()
+        for line in contents:
+            line = line.rstrip("\n")
+
+    field: list[list[Any]] = list()
+    for ii in range(len(contents)):
+        row: list[Any] = list()
+        for jj in range(len(contents[0])):
+            item = [contents[ii][jj]]
+            if item != ['\n']:
+                row.append(item)
+        field.append(row)
+    return field 
+
+
+def transpose_field(contents: list[list[list[Any]]]) -> list[list[Any]]:
+    ax_idx0: int = len(contents)
+    ax_idx1: int = len(contents[0])
+    field_t: list[list[list[Any]]] = [
+        [[] for j in range(ax_idx1)] for i in range(ax_idx0)
+    ]
+
+    for ii in range(ax_idx0):
+        for jj in range(ax_idx1):
+            field_t[ii][jj] = contents[jj][ii]
+
+    return field_t
+
+
+def print_field(field: list[list[list[Any]]]) -> None:
+    for ii, line in enumerate(field):
+        print(line)
 
 
 def split_line(line: str, cast: Optional[callable] = None) -> tuple[Any, ...]:
