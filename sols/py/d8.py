@@ -1,5 +1,6 @@
-from aoc_lib import read_file, read_to_field, Field, Vec
-from math import sqrt
+from aoc_lib import read_file, read_to_field, Vec, Field
+from time import time_ns
+from collections import defaultdict
 
 
 def distance_between_all(pos: Vec, antennae_coords: list[Vec]) -> list[float]:
@@ -11,12 +12,12 @@ def distance_between_all(pos: Vec, antennae_coords: list[Vec]) -> list[float]:
 
 
 def colinear(vec_one: Vec, vec_two: Vec) -> bool:
-    # if (vec_one.x == 0 and vec_one.y == 0) or (vec_two.x == 0 and vec_two.y == 0):
-    #     return True
-    # if vec_two.x == 0 or vec_two.y == 0:
-    #     return False
-    # elif vec_one.x == 0:
-    #     return vec_two.y == 0
+    if (vec_one.x == 0 and vec_one.y == 0) or (vec_two.x == 0 and vec_two.y == 0):
+        return True
+    if vec_two.x == 0 or vec_two.y == 0:
+        return False
+    elif vec_one.x == 0:
+        return vec_two.y == 0
     res = vec_one / vec_two
     return res.x == res.y
 
@@ -29,9 +30,9 @@ def compute_if_antinode_part1(pos: Vec, antennae: dict[str, list[Vec]]) -> bool:
     for ant_type in antennae.keys():
         antennae_coords = antennae[ant_type]
         distances = distance_between_all(pos, antennae_coords)
-        for dist_0, ant_0 in zip(distances, antennae_coords):
-            for dist_1, ant_1 in zip(distances, antennae_coords):
-                if dist_1 == 2 * dist_0 and colinear(ant_0 - pos, ant_1 - pos):
+        for ii, (dist_0, ant_0) in enumerate(zip(distances, antennae_coords)):
+            for jj, (dist_1, ant_1) in enumerate(zip(distances, antennae_coords)):
+                if ii != jj and dist_1 == 2 * dist_0 and colinear(ant_0 - pos, ant_1 - pos):
                     return True
     return False
 
@@ -63,42 +64,32 @@ def compute_if_antinode_part2(pos: Vec, antennae: dict[str, list[Vec]]) -> bool:
 if __name__ == "__main__":
     contents = read_file(r"inputs/d8.txt")
 
-    antennae: dict[str, list[Vec]] = dict()
+    antennae: dict[str, list[Vec]] = defaultdict(list)
     for ii, line in enumerate(contents):
         for jj, char in enumerate(line):
             if char != ".":
-                try:
-                    antennae[char].append(Vec(ii, jj))
-                except KeyError:
-                    antennae[char] = list()
-                    antennae[char].append(Vec(ii, jj))
+                antennae[char].append(Vec(ii, jj))
 
     # Computation and visualisation part 1
-    field: Field = read_to_field(r"inputs/d8.txt")
-    field_dims = field.shape()
+    field_dims = (ii, jj)
 
     count = 0
-    for xx in range(field_dims[0]):
-        for yy in range(field_dims[1]):
+    start = time_ns()
+    for xx in range(field_dims[0] + 1):
+        for yy in range(field_dims[1] + 1):
             pos = Vec(xx, yy)
             if compute_if_antinode_part1(pos, antennae):
-                field.set_square(xx, yy, "#")
                 count += 1
-
-    print(field)
+    print(f"Part 1; answer = {count}, computed in {(time_ns()-start)/1e6:.2f} milliseconds")
     print(count)
 
     # Computation and visualisation part 2
-    field: Field = read_to_field(r"inputs/d8.txt")
-    field_dims = field.shape()
-
     count = 0
-    for xx in range(field_dims[0]):
-        for yy in range(field_dims[1]):
+    start = time_ns()
+    for xx in range(field_dims[0] + 1):
+        for yy in range(field_dims[1] + 1):
             pos = Vec(xx, yy)
             if compute_if_antinode_part2(pos, antennae):
-                field.set_square(xx, yy, "#")
                 count += 1
-
-    print(field)
+    print(f"Part 2; answer = {count}, computed in {(time_ns()-start)/1e6:.2f} milliseconds")
     print(count)
