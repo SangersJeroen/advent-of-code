@@ -1,4 +1,4 @@
-from typing import Any, Optional, Self
+from typing import Any, Optional
 from math import sqrt
 
 
@@ -13,10 +13,16 @@ class Vec:
     def __repr__(self) -> str:
         return f"(x;y):({self.x};{self.y})"
 
-    def __mul__(self, mul: int):
-        return Vec(self.x * mul, self.y * mul)
+    def __mul__(self, o: int | float):
+        match o:
+            case Vec():
+                return self.x * o.x + self.y * o.y
+            case int():
+                return Vec(int(self.x * o), int(self.y * o))
+            case float():
+                return Vec(self.x * o, self.y * o)
 
-    def __sub__(self, other: Self | int | float) -> Self:
+    def __sub__(self, other:  int | float):
         match other:
             case Vec():
                 sub_vec = Vec(self.x - other.x, self.y - other.y)
@@ -28,7 +34,7 @@ class Vec:
     def __abs__(self) -> float:
         return sqrt(self.x**2 + self.y**2)
 
-    def __truediv__(self, other: Self | float | int) -> Self:
+    def __truediv__(self, other:  float | int):
         match other:
             case Vec():
                 if other.x == 0:
@@ -44,6 +50,12 @@ class Vec:
             case _:
                 sub_vec = Vec(self.x / other, self.y / other)
                 return sub_vec
+
+    def __eq__(self, o) -> bool:
+        return self.x == o.x and self.y == o.y
+
+    def __hash__(self):
+        return (self.x, self.y).__hash__()
 
 
 class Field:
@@ -107,21 +119,23 @@ def read_file(file: str) -> list[str]:
     return parsed 
 
 
+def parse_to_field(contents: list[str]) -> Field:
+    raw_string: str = ''
+    for ii, line in enumerate(contents):
+        for jj, char in enumerate(line):
+            if char != '\n':
+                raw_string += char
+
+    return Field(raw_string, ii, jj)
+
+
 def read_to_field(file: str) -> Field:
     # Take a string ppath relative to the working directory of the
     # interpeter and return a list where every entry is a line in string
     # form with the newline characters strpped
     with open(file, "r") as text_file:
         contents: list[str] = text_file.readlines()
-        for line in contents:
-            line = line.rstrip("\n")
-
-    raw_string: str = ''
-    for ii, line in enumerate(contents):
-        for jj, char in enumerate(line):
-            raw_string += char
-
-    return Field(raw_string, ii, jj)
+        return parse_to_field(contents)
 
 
 def transpose_field(contents: list[list[list[Any]]]) -> list[list[Any]]:

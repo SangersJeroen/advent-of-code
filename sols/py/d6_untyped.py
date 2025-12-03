@@ -1,5 +1,6 @@
 from aoc_lib import read_file
 from time import time_ns
+from time import sleep
 
 
 class Vec:
@@ -122,6 +123,7 @@ def find_loops(raw_string, shape, direction: str, guard_pos: Vec) -> int:
             if run_sim(field, direction, guard_pos) == True:
                 # print(f'{xx}, {yy}')
                 print(field)
+                sleep(0.05)
                 count += 1
     return count
 

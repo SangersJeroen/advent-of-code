@@ -1,6 +1,7 @@
 from aoc_lib import read_file, read_to_field, Vec, Field
 from time import time_ns
 from collections import defaultdict
+from time import sleep
 
 
 def distance_between_all(pos: Vec, antennae_coords: list[Vec]) -> list[float]:
@@ -38,6 +39,11 @@ def compute_if_antinode_part1(pos: Vec, antennae: dict[str, list[Vec]]) -> bool:
 
 
 def intersect_two_ant(pos: Vec, antennae_coords: list[Vec]) -> bool:
+    """
+    Checks if current position is inbetween two antennae.
+    This is checked by testing for colinearity between the vector spanning
+    the current position and an antannae and the vector spanning two antannae
+    """
     for ii, ant_0 in enumerate(antennae_coords):
         for jj, ant_1 in enumerate(antennae_coords):
             if ii != jj:
@@ -72,7 +78,7 @@ if __name__ == "__main__":
 
     # Computation and visualisation part 1
     field_dims = (ii, jj)
-
+    field: Field = read_to_field(r"inputs/d8.txt")
     count = 0
     start = time_ns()
     for xx in range(field_dims[0] + 1):
@@ -80,10 +86,14 @@ if __name__ == "__main__":
             pos = Vec(xx, yy)
             if compute_if_antinode_part1(pos, antennae):
                 count += 1
+                sleep(0.05)
+                field.set_square(xx, yy, "X")
+                print(field)
     print(f"Part 1; answer = {count}, computed in {(time_ns()-start)/1e6:.2f} milliseconds")
     print(count)
 
     # Computation and visualisation part 2
+    field: Field = read_to_field(r"inputs/d8.txt")
     count = 0
     start = time_ns()
     for xx in range(field_dims[0] + 1):
@@ -91,5 +101,8 @@ if __name__ == "__main__":
             pos = Vec(xx, yy)
             if compute_if_antinode_part2(pos, antennae):
                 count += 1
+                sleep(0.05)
+                field.set_square(xx, yy, "X")
+                print(field)
     print(f"Part 2; answer = {count}, computed in {(time_ns()-start)/1e6:.2f} milliseconds")
     print(count)
