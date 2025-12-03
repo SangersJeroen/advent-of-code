@@ -4,7 +4,6 @@ import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from lib import read_and_sanitize
-from lib.datastructures import Dial
 
 
 def main(puzzle_input: list[str]) -> None:
